@@ -43,7 +43,6 @@ project/
 ## 🚀 Run Locally (Dev Mode)
 
 ```bash
-# From project root
 npm install
 npm start
 ```
