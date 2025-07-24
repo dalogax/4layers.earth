@@ -1,4 +1,4 @@
-# strato 🌊🌍☁️🌕
+# 4layers.earth 🌊🌍☁️🌕
 
 A minimalist, swipe-driven weather web app that visualizes environmental data in vertical *layers* and lets you scroll through time horizontally.
 
@@ -35,14 +35,6 @@ project/
 └── README.md                 # Project documentation
 ```
 
-## 🛠️ Tech Stack
-
-| Layer         | Tech                                    |
-||--|
-| Frontend      | React, Vite, Tailwind CSS, Framer Motion |
-| Data          | OpenWeatherMap, WorldTides, Moon API     |
-| Hosting       | Vercel or Netlify                        |
-
 ## 🧱 Requirements
 
 - Node.js >= 18 (for local development)
@@ -63,8 +55,8 @@ Visit [http://localhost:8080](http://localhost:8080)
 Build the image and run the container:
 
 ```bash
-docker build -t demo-pwa .
-docker run --rm -it -p 8080:8080 demo-pwa
+docker build -t 4layersearth .
+docker run --rm -it -p 8080:8080 4layersearth
 ```
 
 Then open [http://localhost:8080](http://localhost:8080)

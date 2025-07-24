@@ -1,6 +1,6 @@
 {
-  "name": "Demo PWA",
-  "short_name": "PWA",
+  "name": "4layers.earth",
+  "short_name": "4layers.earth",
   "start_url": "/",
   "display": "standalone",
   "display_override": ["minimal-ui", "standalone", "browser"],
