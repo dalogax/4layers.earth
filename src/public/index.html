@@ -3,16 +3,47 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="manifest" href="manifest.json" />
+  <!-- <link rel="manifest" href="manifest.json" /> -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
-  <title>Minimal PWA</title>
-  <script defer src="app.js"></script>
+  <link rel="stylesheet" href="styles/timeline.css" />
+  <title>4layers.earth</title>
 </head>
 <body>
-  <h1>4layers.earth 🌊🌍☁️🌕</h1>
-  <div>
-    <strong>API Message:</strong> <span id="api-message">Loading...</span>
+  <div class="app-container">
+    <main class="app-main">
+      <!-- Ground Layer Display -->
+      <div class="ground-layer" id="ground-layer">
+        <!-- Timeline Component -->
+        <div class="timeline-wrapper" id="timeline-wrapper">
+          <!-- Timeline will be rendered here by JavaScript -->
+        </div>
+        
+        <!-- Weather Data Display -->
+        <div class="metrics-display" id="metrics-display">
+          <div class="metric-card" id="temperature-display">
+            <div class="metric-value">22°</div>
+            <div class="metric-label">Temperature</div>
+            <div class="metric-details">feels like 24°</div>
+          </div>
+          
+          <div class="metric-card" id="humidity-display">
+            <div class="metric-value">68%</div>
+            <div class="metric-label">Humidity</div>
+          </div>
+          
+          <div class="metric-card" id="pressure-display">
+            <div class="metric-value">1013</div>
+            <div class="metric-label">Pressure</div>
+            <div class="metric-details">hPa</div>
+          </div>
+        </div>
+      </div>
+    </main>
   </div>
-  <script src="app.js"></script>
+  
+  <script type="module" src="app.js"></script>
 </body>
 </html>

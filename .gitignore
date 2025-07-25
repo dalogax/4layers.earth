@@ -3,3 +3,13 @@ node_modules/
 
 # npm lock file
 package-lock.json
+
+# Environment variables
+.env
+
+# Testing
+coverage/
+
+# Logs
+*.log
+npm-debug.log*
