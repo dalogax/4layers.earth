@@ -1,4 +1,4 @@
-import { GroundData, DEFAULT_LOCATION, createGroundDataTemplate } from '../models/GroundData.js';
+import { GroundData, DEFAULT_LOCATION } from '../models/GroundData.js';
 
 /**
  * MockDataService - Generates realistic weather patterns for development

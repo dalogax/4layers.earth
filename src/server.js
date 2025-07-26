@@ -29,6 +29,14 @@ loadEnvironment();
 const app = express();
 const PORT = process.env.PORT || 8080;
 const NODE_ENV = process.env.NODE_ENV || 'development';
+const OPENWEATHER_API_KEY = process.env.OPENWEATHER_API_KEY || null;
+const CACHE_DURATION = process.env.CACHE_DURATION || 300000; // 5 minutes default
+
+// Warn if OpenWeatherMap API key is missing
+if (!OPENWEATHER_API_KEY && NODE_ENV !== 'test') {
+  console.warn('⚠️  OPENWEATHER_API_KEY not found in environment variables. Real API integration will not work.');
+  console.warn('   Using mock data only. Add OPENWEATHER_API_KEY to .env file for real weather data.');
+}
 
 // Initialize Ground Data Service
 const groundDataService = new GroundDataService();

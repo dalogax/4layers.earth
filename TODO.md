@@ -87,14 +87,14 @@
 - Create `__tests__` directory structure for unit and integration tests
 
 **Acceptance Criteria**:
-- [ ] All dependencies are installed and listed in package.json
-- [ ] Development scripts (`npm run dev`, `npm test`, `npm run lint`) work correctly
-- [ ] Space Grotesk font loads and displays correctly
-- [ ] Environment variables are properly loaded and accessible
-- [ ] Ground layer CSS variables are defined and usable
-- [ ] Basic test setup runs without errors
-- [ ] ESLint configuration enforces consistent code style
-- [ ] Git ignores node_modules, .env, and other development files
+- [x] All dependencies are installed and listed in package.json
+- [x] Development scripts (`npm run dev`, `npm test`, `npm run lint`) work correctly
+- [x] Space Grotesk font loads and displays correctly
+- [x] Environment variables are properly loaded and accessible
+- [x] Ground layer CSS variables are defined and usable
+- [x] Basic test setup runs without errors
+- [x] ESLint configuration enforces consistent code style
+- [x] Git ignores node_modules, .env, and other development files
 
 ---
 
@@ -167,16 +167,16 @@ Create `src/services/GroundDataService.js` as an abstraction layer:
 - Swappable between mock and real API implementations
 
 **Acceptance Criteria**:
-- [ ] GroundData interface is clearly defined and documented
-- [ ] Mock data generator creates realistic weather patterns over 48 hours
-- [ ] Timeline data includes proper temporal progression and smooth transitions
-- [ ] API endpoints return consistently structured data
-- [ ] Mock data includes proper temperature cycles (cooler at night, warmer during day)
-- [ ] Humidity and pressure values correlate realistically with temperature
-- [ ] Data service abstraction allows easy switching between mock and real APIs
-- [ ] Location validation prevents invalid coordinates
-- [ ] All mock endpoints respond within 100ms
-- [ ] Generated data passes validation for realistic weather ranges
+- [x] GroundData interface is clearly defined and documented
+- [x] Mock data generator creates realistic weather patterns over 48 hours
+- [x] Timeline data includes proper temporal progression and smooth transitions
+- [x] API endpoints return consistently structured data
+- [x] Mock data includes proper temperature cycles (cooler at night, warmer during day)
+- [x] Humidity and pressure values correlate realistically with temperature
+- [x] Data service abstraction allows easy switching between mock and real APIs
+- [x] Location validation prevents invalid coordinates
+- [x] All mock endpoints respond within 100ms
+- [x] Generated data passes validation for realistic weather ranges
 
 ---
 
@@ -253,18 +253,18 @@ Create `src/services/GroundDataService.js` as an abstraction layer:
 - Maintain scroll position during data updates
 
 **Acceptance Criteria**:
-- [ ] Timeline renders correctly across all device sizes (mobile, tablet, desktop)
-- [ ] Touch scrolling feels natural with proper momentum and snap behavior
-- [ ] Mouse wheel scrolling works smoothly with appropriate sensitivity
-- [ ] Keyboard navigation supports arrow keys with 15-minute precision
-- [ ] Current time is visually distinct and updates automatically
-- [ ] Scrubber snaps to hour boundaries when user stops interacting
-- [ ] Timeline emits accurate timestamp events during user interaction
-- [ ] Animation performance maintains 60fps during scrolling
-- [ ] Touch targets meet accessibility guidelines (minimum 44x44px)
-- [ ] Visual design matches Ground layer color palette from CONCEPT.md
-- [ ] Component works without JavaScript (graceful degradation)
-- [ ] Timeline position persists during page interactions (no unexpected jumps)
+- [x] Timeline renders correctly across all device sizes (mobile, tablet, desktop)
+- [x] Touch scrolling feels natural with proper momentum and snap behavior
+- [x] Mouse wheel scrolling works smoothly with appropriate sensitivity
+- [x] Keyboard navigation supports arrow keys with 15-minute precision
+- [x] Current time is visually distinct and updates automatically
+- [x] Scrubber snaps to hour boundaries when user stops interacting
+- [x] Timeline emits accurate timestamp events during user interaction
+- [x] Animation performance maintains 60fps during scrolling
+- [x] Touch targets meet accessibility guidelines (minimum 44x44px)
+- [x] Visual design matches Ground layer color palette from CONCEPT.md
+- [x] Component works without JavaScript (graceful degradation)
+- [x] Timeline position persists during page interactions (no unexpected jumps)
 
 ---
 

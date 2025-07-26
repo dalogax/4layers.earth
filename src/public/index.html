@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="styles/timeline.css" />
+  <link rel="stylesheet" href="styles/ground-layer.css" />
   <title>4layers.earth</title>
 </head>
 <body>
@@ -23,21 +24,25 @@
         
         <!-- Weather Data Display -->
         <div class="metrics-display" id="metrics-display">
-          <div class="metric-card" id="temperature-display">
-            <div class="metric-value">22°</div>
-            <div class="metric-label">Temperature</div>
-            <div class="metric-details">feels like 24°</div>
+          <div class="metric-display temperature-display" id="temperature-display">
+            <div class="metric-main">
+              <span class="metric-value">22°</span>
+              <span class="metric-details">feels like 24°</span>
+            </div>
           </div>
           
-          <div class="metric-card" id="humidity-display">
-            <div class="metric-value">68%</div>
-            <div class="metric-label">Humidity</div>
+          <div class="metric-display humidity-display" id="humidity-display">
+            <div class="metric-main">
+              <span class="metric-value">68%</span>
+              <span class="metric-details">humidity</span>
+            </div>
           </div>
           
-          <div class="metric-card" id="pressure-display">
-            <div class="metric-value">1013</div>
-            <div class="metric-label">Pressure</div>
-            <div class="metric-details">hPa</div>
+          <div class="metric-display pressure-display" id="pressure-display">
+            <div class="metric-main">
+              <span class="metric-value">1013</span>
+              <span class="metric-details">hPa</span>
+            </div>
           </div>
         </div>
       </div>

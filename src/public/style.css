@@ -15,141 +15,82 @@
 
 body {
   margin: 0;
+  padding: 0;
   font-family: var(--font-family);
   background: linear-gradient(180deg, var(--ground-light) 0%, var(--ground-secondary) 100%);
   color: var(--ground-accent);
   min-height: 100vh;
   line-height: 1.6;
+  overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 .app-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1rem;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .ground-layer {
-  background: rgba(254, 250, 224, 0.3);
-  border-radius: 16px;
-  padding: 2rem;
-  backdrop-filter: blur(10px);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100vh;
 }
 
 .metrics-display {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem 1rem;
+  max-width: 800px; /* Reasonable max width for readability */
+  margin: 0 auto;
   text-align: center;
 }
 
-.metric-card {
-  background: transparent;
-  border: none;
-  padding: 1rem;
-  border-radius: 12px;
-  transition: opacity 300ms ease;
-}
-
-.metric-card:hover {
-  opacity: 0.8;
-}
-
-.metric-value {
-  font-size: 2.5rem;
-  font-weight: 300;
-  color: var(--ground-primary);
-  display: block;
-  margin-bottom: 0.25rem;
-  line-height: 1;
-}
-
-.metric-label {
-  font-size: 0.875rem;
-  font-weight: 300;
-  color: var(--text-blend);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 0.25rem;
-}
-
-.metric-details {
-  font-size: 1rem;
-  font-weight: 300;
-  color: var(--text-subtle);
-  line-height: 1.4;
-}
-
 .timeline-wrapper {
-  margin-top: 2rem;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  /* Timeline takes the top section */
 }
 
 /* Responsive Design */
 
 @media (min-width: 768px) {
-  .app-container {
-    padding: 1.5rem;
-  }
-  
   .metrics-display {
     flex-direction: row;
     justify-content: space-between;
     align-items: baseline;
     text-align: left;
     gap: 2rem;
-  }
-  
-  .metric-card {
-    flex: 1;
-    text-align: center;
+    max-width: 1000px; /* Slightly wider on larger screens */
   }
 }
 
 @media (min-width: 1024px) {
-  .app-container {
-    padding: 2rem;
-  }
-  
   .metrics-display {
     justify-content: space-evenly;
     gap: 3rem;
-  }
-  
-  .metric-value {
-    font-size: 3rem;
+    max-width: 1200px; /* Wider on desktop */
   }
 }
 
 @media (max-width: 600px) {
-  .app-container {
-    padding: 0.75rem;
-  }
-  
-  .ground-layer {
-    padding: 1.5rem;
-    border-radius: 12px;
-  }
-  
-  .metric-value {
-    font-size: 2rem;
+  .metrics-display {
+    padding: 1.5rem 1rem;
+    gap: 1.5rem;
   }
 }
 
-/* High contrast mode support */
-@media (prefers-contrast: high) {
-  .metric-card {
-    color: ButtonText;
-    background: ButtonFace;
-  }
-  
-  .metric-value {
-    color: ButtonText;
-  }
-}
-
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-  .metric-card {
-    transition: none;
-  }
-}
+/* High contrast mode and reduced motion are now handled in ground-layer.css */

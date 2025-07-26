@@ -1,7 +1,7 @@
 module.exports = {
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['<rootDir>/__tests__/setup.js'],
-  moduleNameMapping: {
+  moduleNameMapper: {
     '\\.(css|less|scss)$': 'identity-obj-proxy'
   },
   collectCoverageFrom: [
