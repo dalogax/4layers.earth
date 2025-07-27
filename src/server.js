@@ -41,6 +41,11 @@ if (!OPENWEATHER_API_KEY && NODE_ENV !== 'test') {
 // Initialize Ground Data Service
 const groundDataService = new GroundDataService();
 
+// Periodic cache cleanup (every 15 minutes)
+setInterval(() => {
+  groundDataService.cleanup();
+}, 15 * 60 * 1000);
+
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 
@@ -148,6 +153,69 @@ app.get('/api/ground/location', async (req, res) => {
   }
 });
 
+/**
+ * GET /api/ground/stats - Service statistics and health
+ */
+app.get('/api/ground/stats', (req, res) => {
+  try {
+    const stats = groundDataService.getStats();
+    
+    res.json({
+      status: 'success',
+      data: {
+        service: stats,
+        server: {
+          uptime: process.uptime(),
+          memory: process.memoryUsage(),
+          nodeVersion: process.version,
+          environment: NODE_ENV,
+          openWeatherApiConfigured: !!OPENWEATHER_API_KEY
+        }
+      },
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+/**
+ * POST /api/ground/mode - Switch between real API and mock data (development only)
+ */
+app.post('/api/ground/mode', (req, res) => {
+  if (NODE_ENV === 'production') {
+    return res.status(403).json({
+      status: 'error',
+      message: 'API mode switching not allowed in production',
+      timestamp: new Date().toISOString()
+    });
+  }
+
+  try {
+    const { useRealAPI } = req.body;
+    groundDataService.setAPIMode(useRealAPI);
+    
+    res.json({
+      status: 'success',
+      data: {
+        mode: useRealAPI ? 'real-api' : 'mock',
+        message: `Switched to ${useRealAPI ? 'real API' : 'mock data'} mode`
+      },
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(400).json({
+      status: 'error',
+      message: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
 // Catch-all: serve index.html for any non-API route (for SPA/PWA)
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
@@ -156,8 +224,13 @@ app.get('*', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
   console.log(`Environment: ${NODE_ENV}`);
+  console.log(`OpenWeatherMap API: ${OPENWEATHER_API_KEY ? '✅ Configured' : '❌ Not configured (using mock data)'}`);
   console.log('Ground Layer API endpoints:');
   console.log('  GET /api/ground/current');
   console.log('  GET /api/ground/timeline');
   console.log('  GET /api/ground/location');
+  console.log('  GET /api/ground/stats');
+  if (NODE_ENV !== 'production') {
+    console.log('  POST /api/ground/mode (dev only)');
+  }
 });

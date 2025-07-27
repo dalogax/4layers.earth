@@ -24,6 +24,9 @@ class WeatherApp {
     try {
       console.log('Starting simplified app initialization...');
       
+      // Request user location first
+      await this.requestUserLocation();
+      
       // Initialize timeline component
       this.initializeTimeline();
       
@@ -40,6 +43,80 @@ class WeatherApp {
     } catch (error) {
       console.error('Failed to initialize app:', error);
       this.initializeBasicFunctionality();
+    }
+  }
+
+  async requestUserLocation() {
+    if (!navigator.geolocation) {
+      console.log('Geolocation not supported, using default location (New York)');
+      this.updateLocationDisplay('New York, NY');
+      return;
+    }
+
+    try {
+      console.log('Requesting user location...');
+      
+      const position = await new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(
+          resolve,
+          reject,
+          {
+            enableHighAccuracy: false,
+            timeout: 10000,
+            maximumAge: 300000 // 5 minutes
+          }
+        );
+      });
+
+      this.currentLocation = {
+        lat: position.coords.latitude,
+        lon: position.coords.longitude
+      };
+
+      console.log('User location obtained:', this.currentLocation);
+      
+      // Get location name for display
+      await this.getLocationName();
+
+    } catch (error) {
+      console.log('Geolocation failed, using default location:', error.message);
+      this.updateLocationDisplay('New York, NY');
+    }
+  }
+
+  async getLocationName() {
+    try {
+      // Use reverse geocoding to get location name
+      const response = await fetch(`/api/ground/current?lat=${this.currentLocation.lat}&lon=${this.currentLocation.lon}`);
+      
+      if (response.ok) {
+        const result = await response.json();
+        if (result.status === 'success' && result.data.location) {
+          const location = result.data.location;
+          let displayName = location.city || 'Unknown Location';
+          
+          // Add state/country if available
+          if (location.country === 'US' && location.state) {
+            displayName += `, ${location.state}`;
+          } else if (location.country && location.country !== 'US') {
+            displayName += `, ${location.country}`;
+          }
+          
+          this.updateLocationDisplay(displayName);
+        }
+      }
+    } catch (error) {
+      console.warn('Failed to get location name:', error.message);
+      // Show coordinates if we can't get a name
+      this.updateLocationDisplay(`${this.currentLocation.lat.toFixed(1)}°, ${this.currentLocation.lon.toFixed(1)}°`);
+    }
+  }
+
+  updateLocationDisplay(locationName) {
+    const locationElement = document.getElementById('location-display');
+    if (locationElement) {
+      locationElement.textContent = locationName;
+      locationElement.classList.add('visible');
     }
   }
 

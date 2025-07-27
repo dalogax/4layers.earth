@@ -806,21 +806,21 @@ Add new dependencies:
 ```
 
 **Acceptance Criteria**:
-- [ ] OpenWeatherMap API integration works with valid API key
-- [ ] All three Ground layer metrics (temperature, humidity, pressure) display real data
-- [ ] API responses are cached appropriately to minimize quota usage
-- [ ] Rate limiting prevents exceeding OpenWeatherMap's limits (60/minute, 1000/day)
-- [ ] Error handling gracefully falls back to cached or mock data
-- [ ] Location services successfully resolve user coordinates
-- [ ] Data transformation correctly converts OpenWeatherMap format to GroundData interface
-- [ ] Timeline data combines current weather and forecast seamlessly
-- [ ] Invalid coordinates return helpful error messages
-- [ ] API quota monitoring prevents unexpected service interruptions
-- [ ] Frontend gracefully handles API failures without breaking user experience
-- [ ] Performance monitoring shows API response times under 2 seconds
-- [ ] Development environment supports easy toggling between mock and real data
-- [ ] All API endpoints include proper error responses and status codes
-- [ ] Data validation ensures only realistic weather values are displayed
+- [x] OpenWeatherMap API integration works with valid API key
+- [x] All three Ground layer metrics (temperature, humidity, pressure) display real data
+- [x] API responses are cached appropriately to minimize quota usage
+- [x] Rate limiting prevents exceeding OpenWeatherMap's limits (60/minute, 1000/day)
+- [x] Error handling gracefully falls back to cached or mock data
+- [x] Location services successfully resolve user coordinates
+- [x] Data transformation correctly converts OpenWeatherMap format to GroundData interface
+- [x] Timeline data combines current weather and forecast seamlessly
+- [x] Invalid coordinates return helpful error messages
+- [x] API quota monitoring prevents unexpected service interruptions
+- [x] Frontend gracefully handles API failures without breaking user experience
+- [x] Performance monitoring shows API response times under 2 seconds
+- [x] Development environment supports easy toggling between mock and real data
+- [x] All API endpoints include proper error responses and status codes
+- [x] Data validation ensures only realistic weather values are displayed
 
 ---
 
