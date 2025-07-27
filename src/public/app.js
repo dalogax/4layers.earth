@@ -1,11 +1,23 @@
 // Main application logic
 import { Timeline } from './components/Timeline.js';
+import { CounterAnimation, TextTransition, ValueInterpolator } from './utils/AnimationUtils.js';
 
 class WeatherApp {
   constructor() {
     this.currentLocation = { lat: 40.7128, lon: -74.0060 }; // New York default
     this.timeline = null;
     this.groundData = null;
+    
+    // Animation controllers
+    this.animations = {
+      temperature: null,
+      humidity: null,
+      pressure: null,
+      temperatureDetails: null
+    };
+    
+    this.valueInterpolator = new ValueInterpolator();
+    this.isDragging = false;
     
     this.init();
   }
@@ -45,7 +57,49 @@ class WeatherApp {
       onDragEnd: this.handleDragEnd.bind(this)
     });
 
+    // Initialize animation controllers after timeline is created
+    this.initializeAnimations();
+
     console.log('Timeline component initialized');
+  }
+
+  initializeAnimations() {
+    // Initialize counter animations for numeric values
+    const tempValue = document.querySelector('#temperature-display .metric-value');
+    if (tempValue) {
+      this.animations.temperature = new CounterAnimation(tempValue, {
+        duration: 400,
+        decimals: 0,
+        suffix: '°'
+      });
+    }
+
+    const humidityValue = document.querySelector('#humidity-display .metric-value');
+    if (humidityValue) {
+      this.animations.humidity = new CounterAnimation(humidityValue, {
+        duration: 400,
+        decimals: 0,
+        suffix: '%'
+      });
+    }
+
+    const pressureValue = document.querySelector('#pressure-display .metric-value');
+    if (pressureValue) {
+      this.animations.pressure = new CounterAnimation(pressureValue, {
+        duration: 400,
+        decimals: 0
+      });
+    }
+
+    // Initialize text transitions for details
+    const tempDetails = document.querySelector('#temperature-display .metric-details');
+    if (tempDetails) {
+      this.animations.temperatureDetails = new TextTransition(tempDetails, {
+        duration: 300
+      });
+    }
+
+    console.log('Animation controllers initialized');
   }
 
   async loadCurrentWeather() {
@@ -65,7 +119,9 @@ class WeatherApp {
       }
       
       this.groundData = result.data;
-      this.updateWeatherDisplay(this.groundData);
+      
+      // Set initial values without animation
+      this.setInitialValues(this.groundData);
       
       console.log('Current weather data loaded:', this.groundData);
     } catch (error) {
@@ -73,13 +129,35 @@ class WeatherApp {
       this.showError('Failed to load weather data. Using default values.');
       
       // Show default/placeholder data
-      this.updateWeatherDisplay({
+      const defaultData = {
         metrics: {
           temperature: { current: 22, feelsLike: 24 },
           humidity: 68,
           pressure: { current: 1013 }
         }
-      });
+      };
+      
+      this.setInitialValues(defaultData);
+    }
+  }
+
+  setInitialValues(data) {
+    // Set initial values immediately without animations
+    if (data.metrics?.temperature && this.animations.temperature) {
+      this.animations.temperature.setValue(Math.round(data.metrics.temperature.current));
+    }
+    
+    if (data.metrics?.humidity && this.animations.humidity) {
+      this.animations.humidity.setValue(data.metrics.humidity);
+    }
+    
+    if (data.metrics?.pressure?.current && this.animations.pressure) {
+      this.animations.pressure.setValue(Math.round(data.metrics.pressure.current));
+    }
+    
+    if (data.metrics?.temperature?.feelsLike && this.animations.temperatureDetails) {
+      const detailsText = `feels like ${Math.round(data.metrics.temperature.feelsLike)}°`;
+      this.animations.temperatureDetails.setText(detailsText);
     }
   }
 
@@ -122,49 +200,45 @@ class WeatherApp {
   }
 
   updateWeatherDisplay(data) {
-    // Update temperature
-    const tempDisplay = document.getElementById('temperature-display');
-    if (tempDisplay && data.metrics?.temperature) {
-      const tempValue = tempDisplay.querySelector('.metric-value');
-      const tempDetails = tempDisplay.querySelector('.metric-details');
-      
-      if (tempValue) {
-        tempValue.textContent = `${Math.round(data.metrics.temperature.current)}°`;
+    // Use smooth animations for value updates
+    if (data.metrics?.temperature) {
+      // Animate temperature value
+      if (this.animations.temperature) {
+        this.animations.temperature.animateTo(Math.round(data.metrics.temperature.current));
       }
       
-      if (tempDetails && data.metrics.temperature.feelsLike) {
-        tempDetails.textContent = `feels like ${Math.round(data.metrics.temperature.feelsLike)}°`;
-      }
-    }
-
-    // Update humidity
-    const humidityDisplay = document.getElementById('humidity-display');
-    if (humidityDisplay && data.metrics?.humidity) {
-      const humidityValue = humidityDisplay.querySelector('.metric-value');
-      
-      if (humidityValue) {
-        humidityValue.textContent = `${data.metrics.humidity}%`;
+      // Animate temperature details text
+      if (this.animations.temperatureDetails && data.metrics.temperature.feelsLike) {
+        const detailsText = `feels like ${Math.round(data.metrics.temperature.feelsLike)}°`;
+        if (this.isDragging) {
+          // During dragging, update immediately for responsiveness
+          this.animations.temperatureDetails.setText(detailsText);
+        } else {
+          // When not dragging, use smooth transition
+          this.animations.temperatureDetails.transitionTo(detailsText);
+        }
       }
     }
 
-    // Update pressure
-    const pressureDisplay = document.getElementById('pressure-display');
-    if (pressureDisplay && data.metrics?.pressure) {
-      const pressureValue = pressureDisplay.querySelector('.metric-value');
-      
-      if (pressureValue) {
-        pressureValue.textContent = Math.round(data.metrics.pressure.current);
-      }
+    // Animate humidity value
+    if (data.metrics?.humidity && this.animations.humidity) {
+      this.animations.humidity.animateTo(data.metrics.humidity);
+    }
+
+    // Animate pressure value
+    if (data.metrics?.pressure?.current && this.animations.pressure) {
+      this.animations.pressure.animateTo(Math.round(data.metrics.pressure.current));
     }
   }
 
   async handleTimeChange(event) {
     console.log('Time changed to:', event.timestamp);
     
-    // In Phase 1.5, this will trigger real-time data updates
-    // For now, we'll simulate the behavior
+    // Smooth interpolation during timeline scrubbing
     try {
       const data = await this.loadTimelineData(event.timestamp);
+      
+      // Apply smooth transitions during timeline interaction
       this.updateWeatherDisplay(data);
     } catch (error) {
       console.error('Failed to update weather data for timeline:', error);
@@ -173,12 +247,23 @@ class WeatherApp {
 
   handleDragStart(event) {
     console.log('Timeline drag started at:', event.timestamp);
-    // Add visual feedback for drag start if needed
+    this.isDragging = true;
+    
+    // Switch to immediate updates during dragging for responsiveness
+    document.body.classList.add('dragging');
   }
 
   handleDragEnd(event) {
     console.log('Timeline drag ended at:', event.timestamp);
-    // Add visual feedback for drag end if needed
+    this.isDragging = false;
+    
+    // Resume smooth animations after dragging
+    document.body.classList.remove('dragging');
+    
+    // Trigger a final smooth update with the end position
+    setTimeout(() => {
+      this.handleTimeChange(event);
+    }, 50);
   }
 
   initializeServiceWorker() {

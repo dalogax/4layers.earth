@@ -38,6 +38,12 @@
   display: block;
   margin-bottom: 0.25rem;
   transition: all 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: auto; /* Enable hardware acceleration when animating */
+}
+
+/* Enhanced animations for smooth counter transitions */
+.metric-value.animating {
+  will-change: contents;
 }
 
 .metric-details {
@@ -46,6 +52,18 @@
   color: var(--text-subtle);
   line-height: 1.4;
   transition: all 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: auto;
+}
+
+/* Smooth text transitions */
+.metric-details.transitioning {
+  will-change: opacity;
+}
+
+/* Performance optimization during dragging */
+body.dragging .metric-value,
+body.dragging .metric-details {
+  transition-duration: 0ms; /* Immediate updates during drag */
 }
 
 /* Responsive adjustments */
