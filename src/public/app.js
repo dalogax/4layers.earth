@@ -1,6 +1,6 @@
-// Main application logic
+// Simplified app for MVP - removing over-engineered Phase 1.5 complexity
 import { Timeline } from './components/Timeline.js';
-import { CounterAnimation, TextTransition, ValueInterpolator } from './utils/AnimationUtils.js';
+import { CounterAnimation, TextTransition } from './utils/AnimationUtils.js';
 
 class WeatherApp {
   constructor() {
@@ -8,7 +8,7 @@ class WeatherApp {
     this.timeline = null;
     this.groundData = null;
     
-    // Animation controllers
+    // Simple animation controllers
     this.animations = {
       temperature: null,
       humidity: null,
@@ -16,16 +16,19 @@ class WeatherApp {
       temperatureDetails: null
     };
     
-    this.valueInterpolator = new ValueInterpolator();
     this.isDragging = false;
-    
     this.init();
   }
 
   async init() {
     try {
+      console.log('Starting simplified app initialization...');
+      
       // Initialize timeline component
       this.initializeTimeline();
+      
+      // Initialize animations
+      this.initializeAnimations();
       
       // Load initial weather data
       await this.loadCurrentWeather();
@@ -36,31 +39,36 @@ class WeatherApp {
       console.log('Weather app initialized successfully');
     } catch (error) {
       console.error('Failed to initialize app:', error);
+      this.initializeBasicFunctionality();
     }
   }
 
   initializeTimeline() {
+    console.log('Initializing timeline...');
+    
     const timelineWrapper = document.getElementById('timeline-wrapper');
     if (!timelineWrapper) {
-      throw new Error('Timeline wrapper not found');
+      console.error('Timeline wrapper not found!');
+      return;
     }
 
-    this.timeline = new Timeline(timelineWrapper, {
-      totalHours: 48,
-      centerHour: 24,
-      snapToHour: true,
-      showCurrentTime: true,
-      touchEnabled: true,
-      keyboardEnabled: true,
-      onTimeChange: this.handleTimeChange.bind(this),
-      onDragStart: this.handleDragStart.bind(this),
-      onDragEnd: this.handleDragEnd.bind(this)
-    });
-
-    // Initialize animation controllers after timeline is created
-    this.initializeAnimations();
-
-    console.log('Timeline component initialized');
+    try {
+      this.timeline = new Timeline(timelineWrapper, {
+        totalHours: 48,
+        centerHour: 24,
+        snapToHour: true,
+        showCurrentTime: true,
+        touchEnabled: true,
+        keyboardEnabled: true,
+        onTimeChange: this.handleTimeChange.bind(this),
+        onDragStart: this.handleDragStart.bind(this),
+        onDragEnd: this.handleDragEnd.bind(this)
+      });
+      
+      console.log('Timeline component initialized successfully');
+    } catch (error) {
+      console.error('Error creating Timeline:', error);
+    }
   }
 
   initializeAnimations() {
@@ -104,9 +112,7 @@ class WeatherApp {
 
   async loadCurrentWeather() {
     try {
-      const response = await fetch(
-        `/api/ground/current?lat=${this.currentLocation.lat}&lon=${this.currentLocation.lon}`
-      );
+      const response = await fetch(`/api/ground/current?lat=${this.currentLocation.lat}&lon=${this.currentLocation.lon}`);
       
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: Failed to fetch weather data`);
@@ -125,11 +131,11 @@ class WeatherApp {
       
       console.log('Current weather data loaded:', this.groundData);
     } catch (error) {
-      console.error('Failed to load weather data:', error);
-      this.showError('Failed to load weather data. Using default values.');
+      console.warn('Failed to load weather data, using defaults:', error);
       
       // Show default/placeholder data
       const defaultData = {
+        timestamp: new Date().toISOString(),
         metrics: {
           temperature: { current: 22, feelsLike: 24 },
           humidity: 68,
@@ -163,11 +169,8 @@ class WeatherApp {
 
   async loadTimelineData(timestamp) {
     try {
-      // For now, just load current data
-      // In Phase 1.5, this will load proper timeline data
-      const response = await fetch(
-        `/api/ground/timeline?lat=${this.currentLocation.lat}&lon=${this.currentLocation.lon}&hours=48`
-      );
+      // Simple API call - let the backend handle caching
+      const response = await fetch(`/api/ground/timeline?lat=${this.currentLocation.lat}&lon=${this.currentLocation.lon}&hours=48`);
       
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: Failed to fetch timeline data`);
@@ -194,7 +197,7 @@ class WeatherApp {
       
       return closestData;
     } catch (error) {
-      console.error('Failed to load timeline data:', error);
+      console.warn('Failed to load timeline data:', error);
       return this.groundData; // Fallback to current data
     }
   }
@@ -234,36 +237,68 @@ class WeatherApp {
   async handleTimeChange(event) {
     console.log('Time changed to:', event.timestamp);
     
-    // Smooth interpolation during timeline scrubbing
     try {
       const data = await this.loadTimelineData(event.timestamp);
-      
-      // Apply smooth transitions during timeline interaction
       this.updateWeatherDisplay(data);
     } catch (error) {
-      console.error('Failed to update weather data for timeline:', error);
+      console.warn('Failed to update weather data for timeline:', error);
     }
   }
 
   handleDragStart(event) {
     console.log('Timeline drag started at:', event.timestamp);
     this.isDragging = true;
-    
-    // Switch to immediate updates during dragging for responsiveness
     document.body.classList.add('dragging');
   }
 
   handleDragEnd(event) {
     console.log('Timeline drag ended at:', event.timestamp);
     this.isDragging = false;
-    
-    // Resume smooth animations after dragging
     document.body.classList.remove('dragging');
     
     // Trigger a final smooth update with the end position
     setTimeout(() => {
       this.handleTimeChange(event);
     }, 50);
+  }
+
+  initializeBasicFunctionality() {
+    console.log('Falling back to basic functionality...');
+    
+    try {
+      // Show basic timeline if possible
+      const timelineWrapper = document.getElementById('timeline-wrapper');
+      if (timelineWrapper && !timelineWrapper.innerHTML.trim()) {
+        timelineWrapper.innerHTML = `
+          <div class="timeline-container">
+            <div class="timeline-track">
+              <div class="timeline-center-indicator"></div>
+              <div class="timeline-hours">
+                <div class="hour-marker">Now</div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      
+      // Initialize animations if possible
+      this.initializeAnimations();
+      
+      // Show default data
+      const defaultData = {
+        timestamp: new Date().toISOString(),
+        metrics: {
+          temperature: { current: 22, feelsLike: 24 },
+          humidity: 68,
+          pressure: { current: 1013 }
+        }
+      };
+      
+      this.setInitialValues(defaultData);
+      console.log('Basic functionality initialized');
+    } catch (error) {
+      console.error('Failed to initialize basic functionality:', error);
+    }
   }
 
   initializeServiceWorker() {

@@ -4,7 +4,7 @@
   --ground-secondary: #F2E8CF;
   --ground-accent: #A0785A;
   --ground-light: #FEFAE0;
-  --font-family: 'Space Grotesk', sans-serif;
+  --font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   --text-blend: rgba(168, 120, 90, 0.7);
   --text-subtle: rgba(168, 120, 90, 0.5);
 }

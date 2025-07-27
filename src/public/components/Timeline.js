@@ -43,12 +43,32 @@ export class Timeline {
    * Initialize the timeline component
    */
   init() {
+    console.log('Timeline init() called');
     this.initialized = false;
-    this.render();
-    this.setupEventListeners();
-    this.calculateDimensions();
-    this.centerOnCurrentTime();
-    this.initialized = true;
+    
+    try {
+      console.log('Rendering timeline...');
+      this.render();
+      console.log('Timeline rendered');
+      
+      console.log('Setting up event listeners...');
+      this.setupEventListeners();
+      console.log('Event listeners setup');
+      
+      console.log('Calculating dimensions...');
+      this.calculateDimensions();
+      console.log('Dimensions calculated');
+      
+      console.log('Centering on current time...');
+      this.centerOnCurrentTime();
+      console.log('Timeline centered');
+      
+      this.initialized = true;
+      console.log('Timeline initialization complete');
+    } catch (error) {
+      console.error('Timeline initialization failed:', error);
+      throw error;
+    }
   }
 
   /**
